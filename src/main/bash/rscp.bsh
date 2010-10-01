@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]
+then
+	echo " "
+	echo "$0: Illegal arguments."
+	echo " "
+	echo "Syntax:"
+	echo "$0 sourcepath destinationpath"
+	exit 1
+fi
+
+rsync -rtlDzvP -e ssh $1 $2

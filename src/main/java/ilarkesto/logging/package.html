@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head></head>
+<body>
+
+<h2>Usage</h2>
+<ul>
+	<li>Declare your logger as a final static constant in your class.
+	This guarantees only one initialization, for all instances of your
+	class.</li>
+	<li>Use the logging methods with arbitrary parameters. The logger
+	will format them.</li>
+</ul>
+The logger trys to interpret the parameters given to a logging method
+such as <code>ILogger.debug(Object[])</code>. If it can not, then it calls
+the
+<code>toString()</code>
+-method.
+
+<h2>Examples</h2>
+<pre>
+public class MyClass {
+
+	private static final Logger	LOG	= Logger.get(MyClass.class);
+
+	public static void main(String[] args) {
+		// default log
+		LOG.debug("started MyClass with following arguments:",args);
+		
+		// log fatal error
+		LOG.error("failed to start MyClass",new RuntimeException("Error"));
+	}
+
+}
+</pre>
+
+
+</body>
+</html>

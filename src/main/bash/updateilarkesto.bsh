@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd
+mkdir ilarkesto-istall
+cd ilarkesto-install
+wget http://servisto.de/projects/ilarkesto/ilarkesto.tar.gz
+if [ $? != 0 ]; then exit 1; fi
+sudo tar -xvzf ilarkesto.tar.gz -C /opt
+cd ..
+rm -rf ilarkesto-install

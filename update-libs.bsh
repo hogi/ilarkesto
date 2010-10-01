@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Downloading libs..."
+wget -q -O ilarkesto-lib.zip http://servisto.de/projects/ilarkesto/ilarkesto-lib.zip
+unzip -o ilarkesto-lib.zip
+rm ilarkesto-lib.zip

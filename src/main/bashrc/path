@@ -1,0 +1,2 @@
+PATH=~/bin:/opt/ilarkesto/bin:$PATH
+export PATH

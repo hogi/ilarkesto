@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# clone important stuff from home dir to $1
+
+if [[ $# -lt 1 ]]
+then
+	echo " "
+	echo "$0: Illegal arguments."
+	echo " "
+	echo "Syntax:"
+	echo "$0 destinationpath"
+	exit 1
+fi
+
+BACKUP_INFO_FILE=~/.backup.info
+
+rsync -rltDzvP -e ssh --exclude-from=$HOME/.rscp-home-exclude ~/ $1
+if [ $? != 0 ]; then exit $?; fi
+
+date +%Y-%m-%d > $BACKUP_INFO_FILE
+scp -p $BACKUP_INFO_FILE $1

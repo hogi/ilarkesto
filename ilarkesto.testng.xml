@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+  
+<suite name="ilarkesto" verbose="2" >
+  <test name="all">
+     <packages>
+      <package name="ilarkesto" />
+      <package name="ilarkesto.core" />
+      <package name="ilarkesto.core.scope" />
+      <package name="ilarkesto.core.menu" />
+      <package name="ilarkesto.scope" />
+      <package name="ilarkesto.mda" />
+      <package name="ilarkesto.mda.generator" />
+      <package name="ilarkesto.mda.model" />
+   </packages>
+  </test>
+</suite>

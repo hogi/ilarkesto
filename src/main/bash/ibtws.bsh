@@ -1,0 +1,3 @@
+#!/bin/bash
+
+javaws http://www.interactivebrokers.com/java/classes/tws.jnlp

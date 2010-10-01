@@ -1,0 +1,39 @@
+#!/bin/bash
+
+FORCE_FLAG=""
+if [ "$1" = "stop" ]; then
+  MEM_OPTS="-Xmx64m"
+  FORCE_FLAG="-force"
+elif [ "$1" != "stop" ]; then
+  MEM_OPTS="-Xmx512m -XX:PermSize=64m -XX:MaxPermSize=128m"
+fi
+
+if [ "$1" = "start" ]; then
+  echo "Deleting old log files..."
+  rm -rf /var/log/tomcat/*
+  echo "Deleting extracted web application -> organizanto"
+  rm -rf /var/webapps/organizanto
+  echo "Deleting extracted web application -> scrum"
+  rm -rf /var/webapps/scrum
+  echo "Deleting extracted web application -> scrum-latest"
+  rm -rf /var/webapps/scrum-latest
+  echo "Deleting extracted web application -> grubalskiapp"
+  rm -rf /var/webapps/grubalskiapp
+fi
+
+echo "Setting environment..."
+export JAVA_HOME=/usr/lib/jvm/java-6
+export JAVA_OPTS="$MEM_OPTS"
+export LANG=de_DE.UTF-8
+export TZ=Europe/Berlin
+export CATALINA_PID=/var/tmp/tomcat/catalina.pid
+
+echo "Calling catalina script..."
+cd /var/www
+/opt/tomcat/bin/catalina.sh $* 
+
+if [ "$1" = "stop" ]; then
+  sleep 5
+  /opt/tomcat/bin/catalina.sh $* $FORCE_FLAG
+  rm $CATALINA_PID
+fi

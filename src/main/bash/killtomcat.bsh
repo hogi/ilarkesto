@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ps -aef | grep -i apache-tomcat | awk '{print $2}' | xargs kill -9

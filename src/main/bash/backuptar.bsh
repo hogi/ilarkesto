@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Creates an encrypted backup-zipfile and deletes old backupfiles.
+#
+
+if [[ $# -lt 4 ]]
+then
+	echo " "
+	echo "$0: Illegal arguments."
+	echo " "
+	echo "Syntax:"
+	echo "$0 backupname backupdestination cleanolderthenminutes path1 [path2] [...]"
+	exit 1
+fi
+
+BACKUP_NAME=$1
+DESTINATION_DIR=$2/$BACKUP_NAME
+CLEANOLDERTHENMINUTES=$3
+
+BACKUP_FILENAME=bak_${BACKUP_NAME}_`date +%Y-%m-%d`.tar.bz2
+DESTINATION_FILE=${DESTINATION_DIR}/${BACKUP_FILENAME}
+
+echo "Creating backup: $DESTINATION_FILE"
+tar -cjpf ${DESTINATION_FILE} $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17}
+if [ $? != 0 ]; then exit 1; fi
+
+echo "Deleting backups older then $CLEANOLDERTHENMINUTES minutes"
+find "${DESTINATION_DIR}" -name "bak_${BACKUP_NAME}_*.tar.*" -mmin +$CLEANOLDERTHENMINUTES -exec rm {} \;

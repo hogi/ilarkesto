@@ -1,0 +1,163 @@
+#!/bin/bash
+
+JARS=lib/xstream-1.1.2.jar:lib/mail-1.4.jar:lib/junit-3.8.1.jar:lib/jaudiotagger-1.0.8.jar:lib/velocity-1.6.4.jar:lib/commons-collections-3.2.1.jar:lib/commons-fileupload-1.2.1.jar:lib/activation-1.1.jar:lib/httpunit-1.6.2.jar:lib/tidy.jar:lib/jdom-1.0.jar:lib/mail-1.4.1.jar:lib/servlet-api-2.4.jar:lib/gwt-user.jar:lib/itext-2.0.2.jar:lib/gwt-dnd.jar:lib/log4j-1.2.14.jar:lib/google-collect-1.0-rc1.jar:lib/gdata-client-1.0.jar:lib/gdata-contacts-3.0.jar:lib/gdata-core-1.0.jar:lib/oacurl-1.0.0.jar:lib/openid4java-0.9.5.jar:lib/testng-5.8.jar
+
+SRC=`pwd`
+BUILD=$SRC/.build
+BUILD_CLASSES=$BUILD/classes
+BUILD_JAVADOC=$BUILD/javadoc
+DEST=$BUILD/ilarkesto
+DEST_BIN=$DEST/bin
+DEST_TOOLS=$DEST/tools
+DEST_BASHRC=$DEST/bashrc
+DEST_JAR=$DEST/jar
+DEST_IMG=$DEST/img
+
+
+
+# checking if in project dir
+############################
+if [ ! -f "src/main/java/ilarkesto/Servers.java" ]
+then
+    echo "$0: build must be started from the organizanto project dir"
+	exit 1
+fi
+
+
+echo ""
+echo "###############"
+echo "# cleaning up #"
+echo "###############"
+rm -rf $DEST
+if [ $? != 0 ]; then exit 1; fi
+
+
+echo ""
+echo "##############################"
+echo "# building main bash-scripts #"
+echo "##############################"
+mkdir -p $DEST_BIN
+cd $SRC/src/main/bash
+for file in $( find . -name '*.bsh' )
+do
+	file=${file#./}
+	filename=${file%.bsh}
+	echo "  ${filename}"
+	destfile=$DEST_BIN/$filename
+	cp $file $destfile
+	if [ $? != 0 ]; then exit 1; fi
+done
+#chown root:root $DEST_BIN/*
+#if [ $? != 0 ]; then exit 1; fi
+chmod 555 $DEST_BIN/*
+if [ $? != 0 ]; then exit 1; fi
+
+
+echo ""
+echo "####################################"
+echo "# building additional bash-Scripts #"
+echo "####################################"
+mkdir -p $DEST_TOOLS
+cd $SRC/src/tools/bash
+for file in $( find . -name '*.bsh' )
+do
+	file=${file#./}
+	filename=${file%.bsh}
+	echo "  ${filename}"
+	destfile=$DEST_TOOLS/$filename
+	cp $file $destfile
+	if [ $? != 0 ]; then exit 1; fi
+done
+#chown root:root $DEST_TOOLS/*
+#if [ $? != 0 ]; then exit 1; fi
+chmod 555 $DEST_TOOLS/*
+if [ $? != 0 ]; then exit 1; fi
+
+
+echo ""
+echo "############################"
+echo "# building bashrc-includes #"
+echo "############################"
+
+mkdir -p $DEST_BASHRC
+
+cp $SRC/src/main/bashrc/* $DEST_BASHRC
+if [ $? != 0 ]; then exit 1; fi
+
+#chown root:root $DEST_BASHRC/*
+#if [ $? != 0 ]; then exit 1; fi
+
+chmod 444 $DEST_BASHRC/*
+if [ $? != 0 ]; then exit 1; fi
+
+
+echo ""
+echo "###################"
+echo "# building images #"
+echo "###################"
+
+mkdir -p $DEST_IMG
+
+cp -r $SRC/img/* $DEST_IMG
+if [ $? != 0 ]; then exit 1; fi
+
+
+echo ""
+echo "############################"
+echo "# downloading dependencies #"
+echo "############################"
+
+cd $SRC
+$SRC/update-libs.bsh
+
+
+echo ""
+echo "################"
+echo "# building jar #"
+echo "################"
+
+cd $SRC
+find src/main/java -name "*.java" > $BUILD/java-files
+mkdir -p $BUILD_CLASSES
+javac -nowarn -encoding UTF-8 -cp $JARS -sourcepath src/main/java/ -d $BUILD_CLASSES @$BUILD/java-files
+if [ $? != 0 ]; then exit 1; fi
+
+mkdir -p $DEST_JAR
+cp -r src/main/java/* $BUILD_CLASSES
+find $BUILD_CLASSES -name ".svn" -exec rm -rf {} \;
+find $BUILD_CLASSES -name "*.java" -exec rm {} \;
+cd $BUILD_CLASSES
+jar -cf $DEST_JAR/ilarkesto.jar *
+if [ $? != 0 ]; then exit 1; fi
+echo ""
+echo "-> $DEST_JAR/ilarkesto.jar"
+
+
+# echo ""
+# echo "####################"
+# echo "# building javadoc #"
+# echo "####################"
+# 
+# cd $SRC
+# mkdir -p $BUILD_JAVADOC
+# javadoc -quiet -encoding UTF-8 -d $BUILD_JAVADOC @$BUILD/java-files
+# if [ $? != 0 ]; then exit 1; fi
+
+
+echo ""
+echo "####################"
+echo "# building tarball #"
+echo "####################"
+
+cd $BUILD
+tar -cvz --owner=root --group=root -f ilarkesto.tar.gz ilarkesto
+if [ $? != 0 ]; then exit 1; fi
+echo ""
+echo "-> $BUILD/ilarkesto.tar.gz"
+
+
+
+echo ""
+echo "#######"
+echo "# :-D #"
+echo "#######"

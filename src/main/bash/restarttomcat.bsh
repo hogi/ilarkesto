@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "-> try stop"
+/etc/init.d/tomcat stop
+
+sleep 5
+echo "-> kill"
+/opt/ilarkesto/bin/killtomcat
+
+sleep 5
+echo "-> start"
+/etc/init.d/tomcat start
+
+sleep 2
+echo "-> tail log"
+tail -f /var/log/tomcat/catalina.out

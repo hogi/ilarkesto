@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html><body>
+
+Framework for creating persistent objects (entities).
+
+<h3>Entities &amp; Data Access Objects</h3>
+
+<p>Every entity has a unique UUID (id).
+For every entity type there is a Data Access Object (DAO), named by the entity.
+While an entity represents the data, the DAO provides access to the entities.
+It contains a delete-, a save- and all available query-methods.</p>
+
+
+<h3>Transactions</h3>
+
+<p>When calling the delete- or the save-method for an entity on its DAO, the action is not performed instantly.
+Instead it is placed in the current transaction.
+The commit-method on the transaction needs to be called, to perform all save and delete actions to all entities
+involved in the transaction.</p>
+<p>When changing properties of an entity, this entity is automatically placed in the current transaction.
+Calling the save-method on the DAO is only required when a new entity is created.</p>
+
+
+<h3>Data Store</h3>
+
+<p>Entities are saved as files. Each entity type gets its own folder.
+In this folder every entity is saved in its own file. The file is named by the entities id.</p>
+
+
+<h3>Backups</h3>
+
+<p>Every time an entity is modified or deleted, a backup copy of the old entity-file is created.
+A backup can by prevented for an entity type by implementing the <code>BackupHostile</code>-interface.</p>
+
+</body></html>

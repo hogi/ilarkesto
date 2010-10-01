@@ -1,0 +1,61 @@
+#!/bin/bash
+
+mkdir -p ~/inbox
+cd ~/inbox
+
+mkdir -p ~/outbox/rockbox/podcasts/chaosradioexpress
+mv -v chaosradio_express_*.mp3 ~/outbox/rockbox/podcasts/chaosradioexpress
+
+mkdir -p ~/outbox/rockbox/podcasts/chaosradiointernational
+mv -v chaosradio_international_*.mp3 ~/outbox/rockbox/podcasts/chaosradiointernational
+
+mkdir -p ~/outbox/rockbox/podcasts/chaosradio
+mv -v chaosradio_*.mp3 ~/outbox/rockbox/podcasts/chaosradio
+
+mkdir -p ~/outbox/rockbox/podcasts/dlf
+mv -v dlf_*.mp3 ~/outbox/rockbox/podcasts/dlf
+
+mkdir -p ~/outbox/rockbox/podcasts/drw
+mv -v drw_*.mp3 ~/outbox/rockbox/podcasts/drw
+
+mkdir -p ~/outbox/rockbox/podcasts/javaposse
+mv -v JavaPosse*.mp3 ~/outbox/rockbox/podcasts/javaposse
+mv -v javaPosse*.mp3 ~/outbox/rockbox/podcasts/javaposse
+
+mkdir -p ~/outbox/rockbox/podcasts/pavlina
+mv -v Pavlina*.mp3 ~/outbox/rockbox/podcasts/pavlina
+
+mkdir -p ~/outbox/rockbox/podcasts/poi
+mv -v POI_*.mp3 ~/outbox/rockbox/podcasts/poi
+
+mkdir -p ~/outbox/rockbox/podcasts/kuechenradio
+mv -v *_kuechenradio*.mp3 ~/outbox/rockbox/podcasts/kuechenradio
+
+mkdir -p ~/outbox/rockbox/podcasts/ubuntuuk
+mv -v uupc_*.ogg ~/outbox/rockbox/podcasts/ubuntuuk
+
+mkdir -p ~/outbox/rockbox/podcasts/tuxradar
+mv -v tuxradar_*.ogg ~/outbox/rockbox/podcasts/tuxradar
+
+mkdir -p ~/outbox/rockbox/podcasts/seradio
+mv -v seradio-*.mp3 ~/outbox/rockbox/podcasts/seradio
+
+mkdir -p ~/outbox/rockbox/podcasts/law-podcasting
+mv -v law-podcasting-*.mp3 ~/outbox/rockbox/podcasts/law-podcasting
+
+mkdir -p ~/outbox/rockbox/podcasts/diegesellschafter
+mv -v dg*-*.mp3 ~/outbox/rockbox/podcasts/diegesellschafter
+
+mkdir -p ~/outbox/rockbox/podcasts/linuxoutlaws
+mv -v linuxoutlaws*.ogg ~/outbox/rockbox/podcasts/linuxoutlaws
+
+mkdir -p ~/outbox/rockbox/podcasts/radiotux
+mv -v *Radiotux*.mp3 ~/outbox/rockbox/podcasts/radiotux
+mv -v *RadioTux*.mp3 ~/outbox/rockbox/podcasts/radiotux
+
+mkdir -p ~/outbox/rockbox/podcasts/androidcentral
+mv -v acpc*.mp3 ~/outbox/rockbox/podcasts/androidcentral
+
+cd ~/outbox/rockbox/podcasts
+rmdir *
+

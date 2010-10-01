@@ -1,0 +1,53 @@
+#!/bin/bash
+
+if [ "$1" = "restart" ]; then
+        $0 stop
+        if [ $? != 0 ]; then exit 1; fi
+        $0 start
+        exit
+fi
+
+TMP_DIR=$HOME/war.tmp
+TOMCAT_DIR=$HOME/tomcat
+WEBAPP_DIR=$TOMCAT_DIR/webapps
+
+FORCE_FLAG=""
+if [ "$1" = "stop" ]; then
+  MEM_OPTS="-Xmx64m"
+  FORCE_FLAG="-force"
+elif [ "$1" != "stop" ]; then
+  MEM_OPTS="-Xmx512m -XX:PermSize=64m -XX:MaxPermSize=128m"
+fi
+
+if [ "$1" = "start" ]; then
+  rm -rf $TOMCAT_DIR/logs/*
+
+  # delete exploded webapps
+  mkdir $TMP_DIR
+  mv $WEBAPP_DIR/*.war $TMP_DIR
+  rm -rf $WEBAPP_DIR/*
+  mv $TMP_DIR/*.war $WEBAPP_DIR/
+  rm -rf $TMP_DIR
+
+  # run prepare script
+  $HOME/tomcat-prepare.bsh
+fi
+
+export JAVA_HOME=/usr/lib/jvm/java-6
+export JAVA_OPTS="-D_$USER $MEM_OPTS"
+export LANG=de_DE.UTF-8
+export TZ=Europe/Berlin
+#export CATALINA_PID=catalina.pid
+
+cd $HOME
+if [ "$1" != "stop" ]; then
+  $TOMCAT_DIR/bin/catalina.sh $*
+fi
+
+if [ "$1" = "stop" ]; then
+  sleep 4
+  pkill java &> /dev/null
+  sleep 1
+  pkill -9 java &> /dev/null
+fi
+

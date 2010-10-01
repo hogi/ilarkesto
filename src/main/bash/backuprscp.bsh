@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]
+then
+	echo " "
+	echo "$0: Illegal arguments."
+	echo " "
+	echo "Syntax:"
+	echo "$0 sourcepath destinationpath"
+	exit 1
+fi
+
+SRC=$1
+DST=$2
+BACKUP_INFO_FILE=$SRC/.backup.info
+
+rm -f $BACKUP_INFO_FILE
+
+rsync -rltDzvP -e ssh $SRC $DST
+if [ $? != 0 ]; then exit 1; fi
+
+touch $BACKUP_INFO_FILE
+scp $BACKUP_INFO_FILE $DST
+rm -f $BACKUP_INFO_FILE

@@ -1,0 +1,2 @@
+javaw -cp /opt/ilarkesto/jar/ilarkesto.jar $*
+

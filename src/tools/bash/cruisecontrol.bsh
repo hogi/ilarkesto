@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ "$1" = "start" ]; then
+	export JAVA_HOME=/usr/lib/jvm/java-6-sun
+	cd /opt/cruisecontrol
+	nohup $JAVA_HOME/bin/java -Dcc.config.forcebuild=true -Dcc.logdir=/var/cruisecontrol/logs -Dcc.artifacts=/var/cruisecontrol/artifacts -Ddashboard.config=/etc/cruisecontrol/dashboard-config.xml -Djavax.management.builder.initial=mx4j.server.MX4JMBeanServerBuilder -Dcc.library.dir=/opt/cruisecontrol/lib -Djetty.logs=/var/log/cruisecontrol -jar /opt/cruisecontrol/lib/cruisecontrol-launcher.jar -webport 8081 -ccname Servisto-Build-Server -dashboardurl http://servisto.de/cruisecontrol/ > /var/log/cruisecontrol/cruisecontrol.out &
+	echo $! > /var/run/cruisecontrol.pid
+	exit
+fi
+
+if [ "$1" = "stop" ]; then
+	kill `cat /var/run/cruisecontrol.pid`
+	sleep 5
+	kill -9 `cat /var/run/cruisecontrol.pid`
+	echo "" > /var/run/cruisecontrol.pid
+fi
+

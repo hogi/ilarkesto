@@ -1,0 +1,5 @@
+. /opt/ilarkesto/bashrc/aliases
+. /opt/ilarkesto/bashrc/prompt
+. /opt/ilarkesto/bashrc/path
+. /opt/ilarkesto/bashrc/env
+
