@@ -160,6 +160,7 @@ public class WordDiff {
 
 	static List<String> tokenize(String s) {
 		List<String> ret = new LinkedList<String>();
+		if (s == null) return ret;
 		boolean word = false;
 		StringBuilder token = null;
 		int len = s.length();

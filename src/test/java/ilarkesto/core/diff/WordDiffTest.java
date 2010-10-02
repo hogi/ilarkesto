@@ -42,6 +42,18 @@ public class WordDiffTest extends ATest {
 	}
 
 	@Test
+	public void addedFromNothing() {
+		assertDiff(null, "a", "[+a]");
+		assertDiff(null, "hello world", "[+hello world]");
+	}
+
+	@Test
+	public void removedToNothing() {
+		assertDiff("a", null, "[-a]");
+		assertDiff("hello world", null, "[-hello world]");
+	}
+
+	@Test
 	public void wordChange() {
 		assertDiff("hello world", "bye world", "[-hello][+bye] world");
 	}
