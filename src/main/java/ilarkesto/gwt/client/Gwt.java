@@ -26,6 +26,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.SubmitButton;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Gwt {
@@ -40,6 +42,33 @@ public class Gwt {
 	public static DateTimeFormat DTF_DAY = DateTimeFormat.getFormat("dd.");
 	public static DateTimeFormat DTF_WEEKDAY_MONTH_DAY = DateTimeFormat.getFormat("EEEE, MMMM d.");
 	public static DateTimeFormat DTF_HOUR_MINUTE = DateTimeFormat.getFormat("HH:mm");
+
+	public static TextBox createTextBox(String id, String value, int width) {
+		return createTextBox(id, id, value, width + "px");
+	}
+
+	public static TextBox createTextBox(String id, String name, String value, String width) {
+		TextBox textBox = new TextBox();
+		textBox.getElement().setId(id);
+		textBox.setName(name);
+		textBox.setValue(value);
+		textBox.setWidth(width);
+		return textBox;
+	}
+
+	public static TextArea createTextArea(String id, String value, int width, int height) {
+		return createTextArea(id, id, value, width + "px", height + "px");
+	}
+
+	public static TextArea createTextArea(String id, String name, String value, String width, String height) {
+		TextArea textArea = new TextArea();
+		textArea.getElement().setId(id);
+		textArea.setName(name);
+		textArea.setValue(value);
+		textArea.setWidth(width);
+		textArea.setHeight(height);
+		return textArea;
+	}
 
 	public static SubmitButton createInvisibleSubmitButton() {
 		SubmitButton button = new SubmitButton();
