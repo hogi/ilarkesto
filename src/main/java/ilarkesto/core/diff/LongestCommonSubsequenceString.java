@@ -1,4 +1,4 @@
-package ilarkesto.core.base;
+package ilarkesto.core.diff;
 
 /**
  * This is an implementation, in Java, of the Longest Common Subsequence algorithm. That is, given two strings
@@ -16,7 +16,7 @@ package ilarkesto.core.base;
  * Copyright (C) 2005 Neil Jones.
  * 
  */
-public class LongestCommonSubsequence {
+public class LongestCommonSubsequenceString {
 
 	// These are "constants" which indicate a direction in the backtracking array.
 	private static final int NEITHER = 0;

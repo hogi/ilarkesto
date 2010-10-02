@@ -1,8 +1,7 @@
 package ilarkesto.core.diff;
 
-import ilarkesto.core.base.LongestCommonSubsequence;
 
-public class Diff {
+public class CharDiff {
 
 	private String left;
 	private String right;
@@ -20,15 +19,15 @@ public class Diff {
 
 	private boolean skipBurn;
 
-	public Diff(String left, String right, DiffMarker marker) {
+	public CharDiff(String left, String right, DiffMarker marker) {
 		super();
 		this.left = left == null ? "" : left;
 		this.right = right == null ? "" : right;
 		this.marker = marker;
 	}
 
-	public Diff diff() {
-		lcs = LongestCommonSubsequence.execute(left, right);
+	public CharDiff diff() {
+		lcs = LongestCommonSubsequenceString.execute(left, right);
 		updateLengths();
 
 		while (skipBurn || (lcsLen > 0 && leftLen > 0 && rightLen > 0)) {
