@@ -8,4 +8,6 @@ public interface DiffMarker {
 
 	String removed(String s);
 
+	String replaced(String oldS, String newS);
+
 }

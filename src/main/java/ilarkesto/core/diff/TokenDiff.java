@@ -1,14 +1,14 @@
 package ilarkesto.core.diff;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public class WordDiff {
+public class TokenDiff {
 
 	private List<String> left;
 	private List<String> right;
 	private DiffMarker marker;
+	private DiffTokenizer tokenizer;
+	private DiffTokenizer subTokenizer;
 
 	private List<String> lcs;
 	private int lcsLen;
@@ -21,37 +21,46 @@ public class WordDiff {
 	private String chRight;
 
 	private boolean skipBurn;
+	private String removed;
 
-	public WordDiff(String left, String right, DiffMarker marker) {
-		this(tokenize(left), tokenize(right), marker);
+	public static String combinedDiff(String left, String right, DiffMarker marker) {
+		return new TokenDiff(left, right, marker, new LineTokenizer(), new WordTokenizer()).diff().toString();
 	}
 
-	public WordDiff(List<String> left, List<String> right, DiffMarker marker) {
-		super();
-		this.left = left == null ? new ArrayList<String>(0) : left;
-		this.right = right == null ? new ArrayList<String>(0) : right;
+	public TokenDiff(String left, String right, DiffMarker marker, DiffTokenizer tokenizer) {
+		this(left, right, marker, tokenizer, null);
+	}
+
+	public TokenDiff(String left, String right, DiffMarker marker, DiffTokenizer tokenizer, DiffTokenizer subTokenizer) {
+		this.left = tokenizer.tokenize(left);
+		this.right = tokenizer.tokenize(right);
 		this.marker = marker;
+		this.tokenizer = tokenizer;
+		this.subTokenizer = subTokenizer;
 	}
 
-	public WordDiff diff() {
+	public TokenDiff diff() {
 		lcs = LongestCommonSubsequenceList.execute(left, right);
 		updateLengths();
 
 		while (skipBurn || (lcsLen > 0 && leftLen > 0 && rightLen > 0)) {
 			burnNext();
 		}
+		if (removed != null) {
+			out.append(marker.removed(removed));
+			removed = null;
+		}
 		if (leftLen == 0 && rightLen == 0) return this;
 		if (leftLen == 0) {
-			out.append(marker.added(concat(right)));
+			out.append(marker.added(tokenizer.concat(right)));
 			return this;
 		}
 		if (rightLen == 0) {
-			out.append(marker.removed(concat(left)));
+			out.append(marker.removed(tokenizer.concat(left)));
 			return this;
 		}
 		if (lcsLen == 0) {
-			out.append(marker.removed(concat(left)));
-			out.append(marker.added(concat(right)));
+			outReplaced(tokenizer.concat(left), tokenizer.concat(right));
 			return this;
 		}
 
@@ -61,6 +70,10 @@ public class WordDiff {
 	private void burnNext() {
 		if (!nextChar()) return;
 		if (chLcs.equals(chLeft) && chLcs.equals(chRight)) {
+			if (removed != null) {
+				out.append(marker.removed(removed));
+				removed = null;
+			}
 			burnSame();
 			return;
 		}
@@ -77,7 +90,7 @@ public class WordDiff {
 			sb.append(chLeft);
 			if (!nextCharLeft()) break;
 		}
-		out.append(marker.removed(sb.toString()));
+		removed = sb.toString();
 		skipBurn = true;
 	}
 
@@ -87,8 +100,24 @@ public class WordDiff {
 			sb.append(chRight);
 			if (!nextCharRight()) break;
 		}
-		out.append(marker.added(sb.toString()));
+		String added = sb.toString();
+		if (removed != null) {
+			outReplaced(removed, added);
+			removed = null;
+		} else {
+			out.append(marker.added(added));
+		}
 		skipBurn = true;
+	}
+
+	private void outReplaced(String removed, String added) {
+		if (subTokenizer == null) {
+			out.append(marker.replaced(removed, added));
+			return;
+		}
+		TokenDiff diff = new TokenDiff(removed, added, marker, subTokenizer);
+		diff.diff();
+		out.append(diff.toString());
 	}
 
 	private void burnSame() {
@@ -156,56 +185,6 @@ public class WordDiff {
 		leftLen = left.size();
 		rightLen = right.size();
 		lcsLen = lcs.size();
-	}
-
-	static List<String> tokenize(String s) {
-		List<String> ret = new LinkedList<String>();
-		if (s == null) return ret;
-		boolean word = false;
-		StringBuilder token = null;
-		int len = s.length();
-		for (int i = 0; i < len; i++) {
-			char ch = s.charAt(i);
-			if (isWordChar(ch)) {
-				if (token == null) {
-					token = new StringBuilder();
-					token.append(ch);
-				} else {
-					if (!word) {
-						ret.add(token.toString());
-						token = new StringBuilder();
-					}
-					token.append(ch);
-				}
-				word = true;
-			} else {
-				if (token == null) {
-					token = new StringBuilder();
-					token.append(ch);
-				} else {
-					if (word) {
-						ret.add(token.toString());
-						token = new StringBuilder();
-					}
-					token.append(ch);
-				}
-				word = false;
-			}
-		}
-		if (token != null) ret.add(token.toString());
-		return ret;
-	}
-
-	static boolean isWordChar(char ch) {
-		return Character.isLetterOrDigit(ch);
-	}
-
-	static String concat(List<String> tokens) {
-		StringBuilder sb = new StringBuilder();
-		for (String token : tokens) {
-			sb.append(token);
-		}
-		return sb.toString();
 	}
 
 	@Override

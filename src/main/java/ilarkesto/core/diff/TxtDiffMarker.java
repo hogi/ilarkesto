@@ -17,4 +17,9 @@ public class TxtDiffMarker implements DiffMarker {
 		return "[-" + s + "]";
 	}
 
+	@Override
+	public String replaced(String oldS, String newS) {
+		return "[" + oldS + "|" + newS + "]";
+	}
+
 }

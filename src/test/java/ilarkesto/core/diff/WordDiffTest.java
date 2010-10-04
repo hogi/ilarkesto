@@ -7,11 +7,6 @@ import org.testng.annotations.Test;
 public class WordDiffTest extends ATest {
 
 	@Test
-	public void tokenization() {
-		assertEquals("a", WordDiff.concat(WordDiff.tokenize("a")));
-	}
-
-	@Test
 	public void same() {
 		assertDiff("a", "a", "a");
 		assertDiff("hello world", "hello world", "hello world");
@@ -55,13 +50,19 @@ public class WordDiffTest extends ATest {
 
 	@Test
 	public void wordChange() {
-		assertDiff("hello world", "bye world", "[-hello][+bye] world");
+		assertDiff("hello", "bye", "[hello|bye]");
+		assertDiff("hello world", "bye world", "[hello|bye] world");
 	}
 
 	private static void assertDiff(String left, String right, String expectedDiff) {
-		WordDiff diff = new WordDiff(left, right, new TxtDiffMarker());
+		long begin = System.currentTimeMillis();
+		TokenDiff diff = new TokenDiff(left, right, new TxtDiffMarker(), new WordTokenizer());
 		diff.diff();
-		assertEquals(diff.toString(), expectedDiff);
+		String computedDiff = diff.toString();
+		long end = System.currentTimeMillis();
+		long duration = end - begin;
+		if (duration > 1000) fail("Computing diff took longer than a second: " + duration + "ms.");
+		assertEquals(computedDiff, expectedDiff);
 	}
 
 }

@@ -19,6 +19,11 @@ public class HtmlDiffMarker implements DiffMarker {
 		return "<span class=\"removed\">" + toHtml(s) + "</span>";
 	}
 
+	@Override
+	public String replaced(String oldS, String newS) {
+		return removed(oldS) + added(newS);
+	}
+
 	private String toHtml(String s) {
 		return Str.toHtml(s);
 	}
